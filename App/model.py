@@ -40,9 +40,23 @@ de creacion y consulta sobre las estructuras de datos.
 
 # -----------------------------------------------------
 #                       API
+def analyzer():
+    analyzer = {"Grafo por ID":None, 
+                "Indice":None}
+    analyzer["indice"] = m.newMap(numelements=1000, 
+                                     maptype="PROBING",
+                                     loadfactor=0.5, 
+                                     comparefunction=comparerMAP)
+    analyzer["Grafo por ID"] = gr.newGraph(datastructure='ADJ_LIST',
+                                        directed=True,
+                                        size=1000,
+                                        comparefunction=comparer)
 # -----------------------------------------------------
 
 # Funciones para agregar informacion al grafo
+def añadirIDalIndice(analyzer, archivo):
+    m.put(analyzer["indice"], archivo["taxi_id"], archivo)
+
 
 # ==============================
 # Funciones de consulta
@@ -55,3 +69,23 @@ de creacion y consulta sobre las estructuras de datos.
 # ==============================
 # Funciones de Comparacion
 # ==============================
+def comparer(stop, keyvaluestop):
+    """
+    Compara dos estaciones
+    """
+    stopcode = keyvaluestop['key']
+    if (stop == stopcode):
+        return 0
+    elif (stop > stopcode):
+        return 1
+    else:
+        return -1
+
+def comparerMap(keyname, value):
+    entry = me.getKey(value)
+    if (keyname == entry):
+        return 0
+    elif (keyname > entry):
+        return 1
+    else:
+        return -1

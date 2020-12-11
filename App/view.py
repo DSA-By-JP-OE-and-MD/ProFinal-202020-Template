@@ -24,7 +24,7 @@
  *
  """
 
-
+from time import process_time
 import sys
 import config
 from App import controller
@@ -41,6 +41,10 @@ operación seleccionada.
 
 # ___________________________________________________
 #  Variables
+size = None
+file = "taxi-trips-wrvz-psew-subset-",size,".csv"
+ciclo = True
+analyzer = None
 # ___________________________________________________
 
 
@@ -51,3 +55,34 @@ operación seleccionada.
 """
 Menu principal
 """
+def menu():
+    print("Bienvenido al menu principal")
+    print("-----------------------------------------")
+    print("1) Inicializar catalogo")
+    print("2) Cargar archivos")
+    print("A) Generar reporte")
+    print("B) Puntos asignados")
+    print("C) Buscar la mejor ruta")
+    print("0) Cerrar programa")
+    print("-----------------------------------------")
+
+while ciclo == True:
+    menu()
+    opcion = str(input("Eliga una opción: "))
+    if opcion == "1":
+        analyzer = controller.InitCatalog()
+    elif opcion == "2":
+        size = input("Eliga el tamaño del archivo (large, medium, small): ")
+        time1 = process_time
+        controller.loadFile(analyzer, size)
+        time2 = process_time
+        print("Se cargo el archivo exitosamente")
+        print("Tiempo de carga: ",str(time2-time1))
+    elif opcion == "A":
+        None
+    elif opcion == "B":
+        None
+    elif opcion == "C":
+        None
+    elif opcion == "0":
+        ciclo = False

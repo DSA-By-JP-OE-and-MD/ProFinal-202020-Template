@@ -42,7 +42,7 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 size = None
-file = "taxi-trips-wrvz-psew-subset-",size,".csv"
+file = "taxi-trips-wrvz-psew-subset-"+str(size)+".csv"
 ciclo = True
 analyzer = None
 # ___________________________________________________
@@ -73,16 +73,25 @@ while ciclo == True:
         analyzer = controller.InitCatalog()
     elif opcion == "2":
         size = input("Eliga el tamaño del archivo (large, medium, small): ")
-        time1 = process_time
-        controller.loadFile(analyzer, size)
-        time2 = process_time
+        file = "taxi-trips-wrvz-psew-subset-"+size+".csv"
+        time1 = float(process_time())
+        controller.loadFile(analyzer, file)
+        time2 = float(process_time())
         print("Se cargo el archivo exitosamente")
-        print("Tiempo de carga: ",str(time2-time1))
+        print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "A":
         None
     elif opcion == "B":
         None
     elif opcion == "C":
-        None
+        origen = input("Escriba el area de inicio: ")
+        destino = input("Escriba el area de llegada: ")
+        rangoA = input("Escriba el rango de hora inicial(formato HH:MM): ")
+        rangoB = input("Escriba el rango de hora final(formato HH:MM): ")
+        time1 = float(process_time())
+        Respuesta = controller.BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino)
+        time2 = float(process_time())
+        print(Respuesta)
+        print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "0":
         ciclo = False

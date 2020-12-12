@@ -27,6 +27,7 @@
 import config as cf
 from App import model
 import csv
+from DISClib.ADT import stack
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -55,10 +56,14 @@ def loadFile(analyzer, file):
                                 delimiter=",")
     for a in input_file:
         model.añadirIDalIndice(analyzer, a)
+        model.añadirAreaAlGrafo(analyzer, a)
         
         
     return analyzer
 
 # ___________________________________________________
 #  Funciones para consultas
+def BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino):
+    A = model.RutaMasRapida(analyzer, rangoA, rangoB, origen, destino)
+    return A
 # ___________________________________________________

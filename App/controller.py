@@ -65,5 +65,16 @@ def loadFile(analyzer, file):
 #  Funciones para consultas
 def BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino):
     A = model.RutaMasRapida(analyzer, rangoA, rangoB, origen, destino)
-    return A
+    Inicio = stack.pop(A[0])["vertexA"].split("-")
+    Duracion = A[1]
+    print("Ruta de viaje: ")
+    while stack.size(A[0]) > 1:
+        B = stack.pop(A[0])["vertexA"].split("-")
+        print(B[0])
+        print("------")
+    n = stack.pop(A[0])["vertexB"].split("-")
+    print(n[0])
+    print("-----------------------------------------")
+    print("Partida del area",Inicio[0],"a la hora",Inicio[1])
+    print("Duracion en minutos del viaje",str(float(Duracion)/60))
 # ___________________________________________________

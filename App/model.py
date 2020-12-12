@@ -69,35 +69,47 @@ def añadirAreaAlGrafo(analyzer, archivo):
     destino = archivo["dropoff_community_area"]
     horainicio = time_converter(archivo["trip_start_timestamp"])
     horafin = time_converter(archivo["trip_end_timestamp"])
-    duracion = archivo["trip_seconds"]
-    if gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio) and gr.containsVertex(analyzer["Grafo por CA"],destino+"-"+horafin):
-        gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
-    elif (not gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)) and gr.containsVertex(analyzer["Grafo por CA"], destino+"-"+horafin):
-        gr.insertVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)
-        gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
-    elif gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio) and (not gr.containsVertex(analyzer["Grafo por CA"], destino+"-"+horafin)):
-        gr.insertVertex(analyzer["Grafo por CA"], destino+"-"+horafin)
-        gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+    if archivo["trip_seconds"] == "":
+        archivo["trip_seconds"] = 0
+    duracion = float(archivo["trip_seconds"])
+    if origen == destino or (destino == "" or origen == ""):
+        None
     else:
-        gr.insertVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)
-        gr.insertVertex(analyzer["Grafo por CA"], destino+"-"+horafin)
-        gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
-# ==============================
+        if gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio) and gr.containsVertex(analyzer["Grafo por CA"],destino+"-"+horafin):
+            gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+        elif (not gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)) and gr.containsVertex(analyzer["Grafo por CA"], destino+"-"+horafin):
+            gr.insertVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)
+            gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+        elif gr.containsVertex(analyzer["Grafo por CA"], origen+"-"+horainicio) and (not gr.containsVertex(analyzer["Grafo por CA"], destino+"-"+horafin)):
+            gr.insertVertex(analyzer["Grafo por CA"], destino+"-"+horafin)
+            gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+        else:
+            gr.insertVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)
+            gr.insertVertex(analyzer["Grafo por CA"], destino+"-"+horafin)
+            gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+    # ==============================
 # Funciones de consulta
 # ==============================
 def RutaMasRapida(analyzer, rangoA, rangoB, origen, destino):
+    origen = origen+".0"
+    destino = destino+".0"
     Lista = gr.vertices(analyzer["Grafo por CA"])
     ite = it.newIterator(Lista)
     while it.hasNext(ite):
         A = it.next(ite)
-        B = A.split()
+        B = A.split("-")
         if B[0] == origen and RangodeHorayMinuto(rangoA, rangoB, B[1]):
             N = djk.Dijkstra(analyzer["Grafo por CA"], A)
             ite2 = it.newIterator(Lista)
             while it.hasNext(ite2):
                 C = it.next(ite2)
-                if C[0] == destino and djk.hasPathTo(N, C):
-                    return djk.pathTo(N, C)
+                D = C.split("-")
+                if D[0] == destino and djk.hasPathTo(N, C):
+                    return [djk.pathTo(N, C), djk.distTo(N, C)]
+                    
+    
+
+    
                     
 
     
@@ -117,7 +129,7 @@ def RangodeHorayMinuto(rangoA, rangoB, hora):
     time = datetime.datetime.strptime(hora, '%H:%M').time()
     timeA = datetime.datetime.strptime(rangoA, '%H:%M').time()
     timeB = datetime.datetime.strptime(rangoB, '%H:%M').time()
-    if timeA >= time and timeB <= time:
+    if timeA <= time and timeB >= time:
         return True
     else:
         return False

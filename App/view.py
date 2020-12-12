@@ -89,9 +89,8 @@ while ciclo == True:
         rangoA = input("Escriba el rango de hora inicial(formato HH:MM): ")
         rangoB = input("Escriba el rango de hora final(formato HH:MM): ")
         time1 = float(process_time())
-        Respuesta = controller.BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino)
+        controller.BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino)
         time2 = float(process_time())
-        print(Respuesta)
         print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "0":
         ciclo = False

@@ -28,6 +28,7 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
+from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
@@ -46,7 +47,7 @@ def analyzer():
     analyzer["indice"] = m.newMap(numelements=1000, 
                                      maptype="PROBING",
                                      loadfactor=0.5, 
-                                     comparefunction=comparerMAP)
+                                     comparefunction=comparerMap)
     analyzer["Grafo por ID"] = gr.newGraph(datastructure='ADJ_LIST',
                                         directed=True,
                                         size=1000,

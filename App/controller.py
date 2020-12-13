@@ -26,7 +26,7 @@
 
 import config as cf
 from App import model
-from DISClib.DataStructures import listiterator as li
+from DISClib.ADT import list as li
 import csv
 
 """
@@ -61,30 +61,16 @@ def loadFile(analyzer, file):
     return analyzer
 
 def SR():
-    return model.SR()
+    return ("Número total de taxis: "+str(model.SR()))
 
 def C():
-    return model.C()
+    return ("Número total de compañías: "+str(model.C()))
 
 def TM(M):
-    A=0
-    L=[]
-    I=li.newIterator(model.TM)
-    while not A>=M and li.hasNext(I)==True:
-        P=li.next(I)
-        L.append(P)
-        A+=1
-    return L
+    return li.subList(model.TM,0,M-1)
 
 def TN(N):
-    B=0
-    L2=[]
-    I2=li.newIterator(model.TN)
-    while not B>=N and li.hasNext(I2)==True:
-        P2=li.next(I)
-        L2.append(P2)
-        B+=1
-    return
+    return li.subList(model.TN,0,N-1)
 
 
 # ___________________________________________________

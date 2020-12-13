@@ -93,6 +93,7 @@ while ciclo == True:
         print(C)
         print(TopM)
         print(TopN)
+        
 
     elif opcion == "B":
         None

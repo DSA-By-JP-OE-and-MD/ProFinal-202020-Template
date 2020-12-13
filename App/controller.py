@@ -26,6 +26,7 @@
 
 import config as cf
 from App import model
+from DISClib.DataStructures import listiterator as li
 import csv
 
 """
@@ -58,6 +59,33 @@ def loadFile(analyzer, file):
         
         
     return analyzer
+
+def SR():
+    return model.SR()
+
+def C():
+    return model.C()
+
+def TM(M):
+    A=0
+    L=[]
+    I=li.newIterator(model.TM)
+    while not A>=M and li.hasNext(I)==True:
+        P=li.next(I)
+        L.append(P)
+        A+=1
+    return L
+
+def TN(N):
+    B=0
+    L2=[]
+    I2=li.newIterator(model.TN)
+    while not B>=N and li.hasNext(I2)==True:
+        P2=li.next(I)
+        L2.append(P2)
+        B+=1
+    return
+
 
 # ___________________________________________________
 #  Funciones para consultas

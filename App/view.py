@@ -79,7 +79,21 @@ while ciclo == True:
         print("Se cargo el archivo exitosamente")
         print("Tiempo de carga: ",str(time2-time1))
     elif opcion == "A":
-        None
+        M=input("Cuantas compañias con mayores taxis afiliados desea ver? ?\n")
+        N=input("Cuantas compañias con mayores servicios prestados desea ver?\n")
+        print("Cargando informe...")
+        timeA1=process_time
+        SR=controller.SR()
+        C=controller.C()
+        TopM=controller.TM(M)
+        TopN=controller.TN(N)
+        timeA2=process_time
+        print("Informe cargado, tiempo en carga: "+str(timeA1-timeA2))
+        print(SR)
+        print(C)
+        print(TopM)
+        print(TopN)
+
     elif opcion == "B":
         None
     elif opcion == "C":

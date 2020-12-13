@@ -57,6 +57,7 @@ def loadFile(analyzer, file):
     for a in input_file:
         model.añadirIDalIndice(analyzer, a)
         model.añadirAreaAlGrafo(analyzer, a)
+        model.añadirViajealaLista(analyzer, a)
         
         
     return analyzer
@@ -77,3 +78,15 @@ def BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino):
     print("-----------------------------------------")
     print("Partida del area",Inicio[0],"a la hora",Inicio[1])
     print("Duracion en minutos del viaje",str(float(Duracion)/60))
+
+def TaxisConPuntosEnFecha(analyzer, fecha, numero):
+    listaV = model.ViajesUtilesEnUnaFecha(analyzer, fecha)
+    tablaV = model.tablaPuntos(listaV)
+    B = model.hallarTop(tablaV, numero)
+    return B
+
+def TaxisConPuntosEntreFechas(analyzer, fecha1, fecha2, numero):
+    listaV = model.ViajesUtilesEntreFechas(analyzer, fecha1, fecha2)
+    tablaV = model.tablaPuntos(listaV)
+    B = model.hallarTop(tablaV, numero)
+    return B

@@ -28,6 +28,7 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import list as lt
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
@@ -47,16 +48,32 @@ def analyzer():
     analyzer["indice"] = m.newMap(numelements=1000, 
                                      maptype="PROBING",
                                      loadfactor=0.5, 
-                                     comparefunction=comparerMAP)
+                                     comparefunction=comparerMap)
     analyzer["Grafo por ID"] = gr.newGraph(datastructure='ADJ_LIST',
                                         directed=True,
                                         size=1000,
                                         comparefunction=comparer)
 # -----------------------------------------------------
 
+def SR(analyzer):
+    taxis=om.keySet(analyzer)
+    taxis=set(taxis)
+    return (lt.size(taxis))
+
+def C(analyzer):
+    return ()
+
+def TM(analyzer,M):
+    return 
+
+def TN(analyzer,N):
+    return 
+
 # Funciones para agregar informacion al grafo
 def añadirIDalIndice(analyzer, archivo):
     m.put(analyzer["indice"], archivo["taxi_id"], archivo)
+
+
 
 
 # ==============================

@@ -83,7 +83,7 @@ while ciclo == True:
         N=input("Cuantas compañias con mayores servicios prestados desea ver?\n")
         print("Cargando informe...")
         timeA1=process_time
-        SR=controller.SR()
+        SR=controller.SR(analyzer)
         C=controller.C()
         TopM=controller.TM(M)
         TopN=controller.TN(N)

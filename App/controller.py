@@ -60,7 +60,7 @@ def loadFile(analyzer, file):
         
     return analyzer
 
-def SR():
+def SR(analyzer):
     return ("Número total de taxis: "+str(model.SR()))
 
 def C():

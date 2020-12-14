@@ -29,6 +29,7 @@ import sys
 import config
 from App import controller
 from DISClib.ADT import stack
+from DISClib.DataStructures import listiterator as it
 import timeit
 assert config
 
@@ -42,11 +43,18 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 size = None
-file = "taxi-trips-wrvz-psew-subset-",size,".csv"
+file = "taxi-trips-wrvz-psew-subset-"+str(size)+".csv"
 ciclo = True
 analyzer = None
 # ___________________________________________________
 
+def printReqB(resp, numero):
+    print("\n")
+    print("TOP "+ numero +" TAXIS CON MÁS PUNTOS")
+    itresp = it.newIterator(resp)
+    while it.hasNext(itresp):
+        M = it.next(itresp)
+        print("- "+M)
 
 # ___________________________________________________
 #  Menu principal
@@ -56,6 +64,7 @@ analyzer = None
 Menu principal
 """
 def menu():
+    print("\n")
     print("Bienvenido al menu principal")
     print("-----------------------------------------")
     print("1) Inicializar catalogo")
@@ -71,18 +80,48 @@ while ciclo == True:
     opcion = str(input("Eliga una opción: "))
     if opcion == "1":
         analyzer = controller.InitCatalog()
+        print("Catalogo inicializado con exito")
     elif opcion == "2":
         size = input("Eliga el tamaño del archivo (large, medium, small): ")
-        time1 = process_time
-        controller.loadFile(analyzer, size)
-        time2 = process_time
+        file = "taxi-trips-wrvz-psew-subset-"+size+".csv"
+        time1 = float(process_time())
+        controller.loadFile(analyzer, file)
+        time2 = float(process_time())
         print("Se cargo el archivo exitosamente")
-        print("Tiempo de carga: ",str(time2-time1))
+        print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "A":
         None
     elif opcion == "B":
-        None
+        print("\n")
+        print("1) Top de taxis en una fecha")
+        print("2) Top de taxis entre dos fechas")
+        print("\n")
+        N = input("Elija una opción: ")
+        if N == "1":
+            print("\n")
+            fecha = input("Ingrese una fecha (YYYY-MM-DD): ")
+            numero = input("¿Cuantas posiciones desea que tenga el top de taxis?: ")
+            time1 = float(process_time())
+            H = controller.TaxisConPuntosEnFecha(analyzer, fecha, int(numero))
+            time2 = float(process_time())
+        else:
+            print("\n")
+            fecha1 = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
+            fecha2 = input("Ingrese la fecha final (YYYY-MM-DD): ")
+            numero = input("¿Cuantas posiciones desea que tenga el top de taxis?: ")
+            time1 = float(process_time())
+            H = controller.TaxisConPuntosEntreFechas(analyzer, fecha1, fecha2, int(numero))
+            time2 = float(process_time())
+        printReqB(H, numero)
+        print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "C":
-        None
+        origen = input("Escriba el area de inicio: ")
+        destino = input("Escriba el area de llegada: ")
+        rangoA = input("Escriba el rango de hora inicial(formato HH:MM): ")
+        rangoB = input("Escriba el rango de hora final(formato HH:MM): ")
+        time1 = float(process_time())
+        controller.BuscarRutaMasCorta(analyzer, rangoA, rangoB, origen, destino)
+        time2 = float(process_time())
+        print("Tiempo de carga: "+str(time2-time1))
     elif opcion == "0":
         ciclo = False

@@ -27,10 +27,12 @@ import config
 from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
+from DISClib.ADT import orderedmap as om
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Algorithms.Sorting import mergesort as mrg
 from DISClib.Utils import error as error
 assert config
 import datetime
@@ -45,7 +47,8 @@ de creacion y consulta sobre las estructuras de datos.
 def analyzer():
     analyzer = {"Grafo por ID":None,
                 "Grafo por CA":None,
-                "indice":None}
+                "indice":None,
+                "tripList":None}
     analyzer["indice"] = m.newMap(numelements=1000, 
                                      maptype="PROBING",
                                      loadfactor=0.5, 
@@ -58,6 +61,7 @@ def analyzer():
                                         directed=True,
                                         size=1000,
                                         comparefunction=comparer)
+    analyzer["tripList"] = lt.newList(datastructure="SINGLE_LINKED")
     return analyzer
 # -----------------------------------------------------
 
@@ -87,6 +91,10 @@ def añadirAreaAlGrafo(analyzer, archivo):
             gr.insertVertex(analyzer["Grafo por CA"], origen+"-"+horainicio)
             gr.insertVertex(analyzer["Grafo por CA"], destino+"-"+horafin)
             gr.addEdge(analyzer["Grafo por CA"], (origen+"-"+horainicio), (destino+"-"+horafin), duracion)
+
+def añadirViajealaLista(analyzer, archivo):
+    lt.addLast(analyzer["tripList"], archivo)
+    
     # ==============================
 # Funciones de consulta
 # ==============================
@@ -155,8 +163,89 @@ def RangodeHorayMinuto(rangoA, rangoB, hora):
             elif minutoA >= minutoB:
                 if """
 
+def ViajesUtilesEnUnaFecha(analyzer, fecha):
+    listaPuntos = lt.newList(datastructure="SINGLE_LINKED")
+    fechain = datetime.datetime.strptime(fecha, "%Y-%m-%d")
+    diain = fechain.date()
+    ite = it.newIterator(analyzer["tripList"])
+    while it.hasNext(ite):
+        A = it.next(ite)
+        fechaviaje = datetime.datetime.strptime(A["trip_start_timestamp"], '%Y-%m-%dT%H:%M:%S.%f')
+        diaviaje = fechaviaje.date()
+        if diain == diaviaje and A["trip_total"] != "" and A["trip_miles"] != "":
+            if float(A["trip_total"]) > 0.0 and float(A["trip_miles"]) > 0.0:
+                lt.addLast(listaPuntos, A)
+    return listaPuntos
 
+def ViajesUtilesEntreFechas(analyzer, fecha1, fecha2):
+    listaPuntos = lt.newList(datastructure="SINGLE_LINKED")
+    fechain1 = datetime.datetime.strptime(fecha1, "%Y-%m-%d")
+    diain1 = fechain1.date()
+    fechain2 = datetime.datetime.strptime(fecha2, "%Y-%m-%d")
+    diain2 = fechain2.date()
+    ite = it.newIterator(analyzer["tripList"])
+    while it.hasNext(ite):
+        A = it.next(ite)
+        fechaviaje = datetime.datetime.strptime(A["trip_start_timestamp"], '%Y-%m-%dT%H:%M:%S.%f')
+        diaviaje = fechaviaje.date()
+        if diain1 <= diaviaje <= diain2 and A["trip_total"] != "" and A["trip_miles"] != "":
+            if float(A["trip_total"]) > 0.0 and float(A["trip_miles"]) > 0.0:
+                lt.addLast(listaPuntos, A)
+    return listaPuntos
 
+def tablaPuntos(lista):
+    poinTable = m.newMap(numelements=1000,
+                         maptype="PROBING",
+                         loadfactor=0.5,
+                         comparefunction=comparerMap)
+    itelista = it.newIterator(lista)
+    while it.hasNext(itelista):
+        V = it.next(itelista)
+        idtaxi = V["taxi_id"]
+        millasV = float(V["trip_miles"])
+        costoV = float(V["trip_total"])
+        if not m.contains(poinTable, idtaxi):
+            m.put(poinTable, idtaxi, {"millas":millasV, "costo":costoV, "servicios":1})
+        else:
+            A = m.get(poinTable, idtaxi)
+            B = me.getValue(A)
+            m.put(poinTable, idtaxi, {"millas":B["millas"]+millasV, "costo":B["costo"]+costoV, "servicios":B["servicios"]+1})
+    llaves = m.keySet(poinTable)
+    puntosTaxi = m.newMap(numelements=1000,
+                          maptype="PROBING",
+                          loadfactor=0.5,
+                          comparefunction=comparerMap)
+    itellaves = it.newIterator(llaves)
+    while it.hasNext(itellaves):
+        C = it.next(itellaves)
+        D = m.get(poinTable, C)
+        E = me.getValue(D)
+        m.put(puntosTaxi, C, (E["millas"]/E["costo"])*E["servicios"])
+    return puntosTaxi
+
+def hallarTop(tabla, numero):
+    taxis = m.keySet(tabla)
+    puntos = m.valueSet(tabla)
+    mrg.mergesort(puntos, lessfunction)
+    listaOrd = lt.newList(datastructure="ARRAY_LIST")
+    i = 0
+    while i < numero:
+        F = lt.lastElement(puntos)
+        lt.addLast(listaOrd, F)
+        lt.removeLast(puntos)
+        i += 1
+    listaTaxis = lt.newList(datastructure="ARRAY_LIST")
+    itelistapuntos = it.newIterator(listaOrd)
+    while it.hasNext(itelistapuntos):
+        G = it.next(itelistapuntos)
+        itetop = it.newIterator(taxis)
+        while it.hasNext(itetop):
+            H = it.next(itetop)
+            I = m.get(tabla, H)
+            J = me.getValue(I)
+            if J == G:
+                lt.addLast(listaTaxis, H)
+    return listaTaxis
 
 # ==============================
 # Funciones de Comparacion
@@ -181,3 +270,8 @@ def comparerMap(keyname, value):
         return 1
     else:
         return -1
+
+def lessfunction(ele1, ele2):
+    if ele1 < ele2:
+        return True
+    return False

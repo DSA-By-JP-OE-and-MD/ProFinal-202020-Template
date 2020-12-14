@@ -120,7 +120,7 @@ def TN(analyzer,N):
         oms.put(rankp,int(com.values()),str(com.keys()))
 
     rankesito=lt.newList()
-    for puesto in range(M):
+    for puesto in range(N):
         p=oms.maxKey(rankp)
         lt.addLast(rankesito,dict(list(rank.keys())[list(rank.values()).index(p)],p))
         oms.deleteMax(rankp)

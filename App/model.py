@@ -94,6 +94,7 @@ def añadirAreaAlGrafo(analyzer, archivo):
 
 def añadirViajealaLista(analyzer, archivo):
     lt.addLast(analyzer["tripList"], archivo)
+    
     # ==============================
 # Funciones de consulta
 # ==============================

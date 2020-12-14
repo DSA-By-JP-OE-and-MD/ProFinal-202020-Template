@@ -26,6 +26,7 @@
 
 import config as cf
 from App import model
+from DISClib.ADT import list as li
 import csv
 from DISClib.ADT import stack
 
@@ -61,6 +62,19 @@ def loadFile(analyzer, file):
         
         
     return analyzer
+
+def SR(analyzer):
+    return ("Número total de taxis: "+str(model.SR()))
+
+def C():
+    return ("Número total de compañías: "+str(model.C()))
+
+def TM(M):
+    return model.TM(analyzer,M)
+
+def TN(N):
+    return model.Tn(analyzer,N)
+
 
 # ___________________________________________________
 #  Funciones para consultas

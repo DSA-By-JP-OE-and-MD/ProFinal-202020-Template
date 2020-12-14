@@ -27,8 +27,9 @@ import config
 from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
-from DISClib.ADT import orderedmap as om
 from DISClib.ADT import list as lt
+from DISClib.ADT import orderedmap as om
+from DISClib.DataStructures import orderedmapstructure as oms
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
@@ -65,6 +66,76 @@ def analyzer():
     return analyzer
 # -----------------------------------------------------
 
+def SR(analyzer):
+    taxis=om.keySet(analyzer["indice"])
+    taxis=set(taxis)
+    return (lt.size(taxis))
+
+def C(analyzer):
+    resto=om.valueSet(analyzer["indice"])
+    compañias=lt.newList()
+    for pedaso in resto:
+        lt.addLast(compañias,pedaso["company"])
+    return (int(lt.size(compañias))+1)
+
+def TM(analyzer,M):
+    rank=oms.newMap('BST',comparefunction=comparerMap)
+    rankp=oms.newMap('BST',comparefunction=comparerMap)
+    sancocho=om.valueSet(analyzer["indice"])
+    for papa in sancocho:
+        if oms.contains(rank,papa["company"])==True:
+            new=oms.get(rank,papa["company"])
+            nueva=lt.newList(new.values())
+            lt.addLast(nueva,papa["taxi_id"])
+            oms.put(rank,str(new.keys()),nueva)
+            if papa["company"]=="" and oms.contains(rank,"Independent Owner")==True:
+                news=oms.get(rank,"Independent Owner")
+                nuevas=lt.newList(news.values())
+                lt.addLast(nuevas,papa["taxi_id"])
+                oms.put(rank,str(news.keys()),nuevas)
+        else:
+            if papa["company"]=="":
+                oms.put(rank,"Independent Owner",1)
+            oms.put(rank,papa["company"],1)
+
+    for com in list(rank):
+        oms.put(rankp,lt.size(set(list(com.values()))),str(com.keys()))
+
+    ranki=lt.newList()
+    for puesto in range(M):
+        p=oms.maxKey(rankp)
+        lt.addLast(ranki,dict(om.keySet(rank)[om.valueSet(rank).index(p)],p))
+        oms.deleteMax(rankp)
+    return ranki
+
+def TN(analyzer,N):
+    rank=oms.newMap('BST',comparefunction=comparerMap)
+    rankp=oms.newMap('BST',comparefunction=comparerMap)
+    sancocho=om.valueSet(analyzer["indice"])
+    for papa in sancocho:
+        if oms.contains(rank,papa["company"])==True:
+            new=oms.get(rank,papa["company"])
+            nueva=int(new.values())+1
+            oms.put(rank,str(new.keys()),nueva)
+            if papa["company"]=="" and oms.contains(rank,"Independent Owner")==True:
+                news=oms.get(rank,"Independent Owner")
+                nuevas=int(news.values())+1
+                oms.put(rank,str(news.keys()),nuevas)
+        else:
+            if papa["company"]=="":
+                oms.put(rank,"Independent Owner",1)
+            oms.put(rank,papa["company"],1)
+
+    for com in list(rank):
+        oms.put(rankp,int(com.values()),str(com.keys()))
+
+    rankesito=lt.newList()
+    for puesto in range(N):
+        p=oms.maxKey(rankp)
+        lt.addLast(rankesito,dict(list(rank.keys())[list(rank.values()).index(p)],p))
+        oms.deleteMax(rankp)
+    return rankesito
+
 # Funciones para agregar informacion al grafo
 def añadirIDalIndice(analyzer, archivo):
     m.put(analyzer["indice"], archivo["taxi_id"], archivo)
@@ -95,7 +166,7 @@ def añadirAreaAlGrafo(analyzer, archivo):
 def añadirViajealaLista(analyzer, archivo):
     lt.addLast(analyzer["tripList"], archivo)
     
-    # ==============================
+# ==============================
 # Funciones de consulta
 # ==============================
 def RutaMasRapida(analyzer, rangoA, rangoB, origen, destino):

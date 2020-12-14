@@ -67,10 +67,10 @@ def C():
     return ("Número total de compañías: "+str(model.C()))
 
 def TM(M):
-    return li.subList(model.TM,0,M-1)
+    return model.TM(analyzer,M)
 
 def TN(N):
-    return li.subList(model.TN,0,N-1)
+    return model.Tn(analyzer,N)
 
 
 # ___________________________________________________

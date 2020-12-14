@@ -75,13 +75,49 @@ def TM(analyzer,M):
     for papa in sancocho:
         if oms.contains(rank,papa["company"])==True:
             new=oms.get(rank,papa["company"])
-            nueva=int(new.values())+1
+            nueva=lt.newList(new.values())
+            lt.addLast(nueva,papa["taxi_id"])
             oms.put(rank,str(new.keys()),nueva)
+            if papa["company"]=="" and oms.contains(rank,"Independent Owner")==True:
+                news=oms.get(rank,"Independent Owner")
+                nuevas=lt.newList(news.values())
+                lt.addLast(nuevas,papa["taxi_id"])
+                oms.put(rank,str(news.keys()),nuevas)
         else:
+            if papa["company"]=="":
+                oms.put(rank,"Independent Owner",1)
             oms.put(rank,papa["company"],1)
 
-    for c in om.keySet(rank):
-        oms.put(rankp,int(c.values()),str(c.keys()))
+    for com in list(rank):
+        oms.put(rankp,lt.size(set(list(com.values()))),str(com.keys()))
+
+    ranki=lt.newList()
+    for puesto in range(M):
+        p=oms.maxKey(rankp)
+        lt.addLast(ranki,dict(om.keySet(rank)[om.valueSet(rank).index(p)],p))
+        oms.deleteMax(rankp)
+    return ranki
+
+def TN(analyzer,N):
+    rank=oms.newMap('BST',comparefunction=comparerMap)
+    rankp=oms.newMap('BST',comparefunction=comparerMap)
+    sancocho=om.valueSet(analyzer["indice"])
+    for papa in sancocho:
+        if oms.contains(rank,papa["company"])==True:
+            new=oms.get(rank,papa["company"])
+            nueva=int(new.values())+1
+            oms.put(rank,str(new.keys()),nueva)
+            if papa["company"]=="" and oms.contains(rank,"Independent Owner")==True:
+                news=oms.get(rank,"Independent Owner")
+                nuevas=int(news.values())+1
+                oms.put(rank,str(news.keys()),nuevas)
+        else:
+            if papa["company"]=="":
+                oms.put(rank,"Independent Owner",1)
+            oms.put(rank,papa["company"],1)
+
+    for com in list(rank):
+        oms.put(rankp,int(com.values()),str(com.keys()))
 
     rankesito=lt.newList()
     for puesto in range(M):
@@ -89,9 +125,6 @@ def TM(analyzer,M):
         lt.addLast(rankesito,dict(list(rank.keys())[list(rank.values()).index(p)],p))
         oms.deleteMax(rankp)
     return rankesito
-
-def TN(analyzer,N):
-    return 
 
 # Funciones para agregar informacion al grafo
 def añadirIDalIndice(analyzer, archivo):

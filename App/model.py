@@ -29,6 +29,7 @@ from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
+from DISClib.DataStructures import orderedmapstructure as oms
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
@@ -56,15 +57,38 @@ def analyzer():
 # -----------------------------------------------------
 
 def SR(analyzer):
-    taxis=om.keySet(analyzer)
+    taxis=om.keySet(analyzer["indice"])
     taxis=set(taxis)
     return (lt.size(taxis))
 
 def C(analyzer):
-    return ()
+    resto=om.valueSet(analyzer["indice"])
+    compañias=lt.newList()
+    for pedaso in resto:
+        lt.addLast(compañias,pedaso["company"])
+    return (int(lt.size(compañias))+1)
 
 def TM(analyzer,M):
-    return 
+    rank=oms.newMap('BST',comparefunction=comparerMap)
+    rankp=oms.newMap('BST',comparefunction=comparerMap)
+    sancocho=om.valueSet(analyzer["indice"])
+    for papa in sancocho:
+        if oms.contains(rank,papa["company"])==True:
+            new=oms.get(rank,papa["company"])
+            nueva=int(new.values())+1
+            oms.put(rank,str(new.keys()),nueva)
+        else:
+            oms.put(rank,papa["company"],1)
+
+    for c in om.keySet(rank):
+        oms.put(rankp,int(c.values()),str(c.keys()))
+
+    rankesito=lt.newList()
+    for puesto in range(M):
+        p=oms.maxKey(rankp)
+        lt.addLast(rankesito,dict(list(rank.keys())[list(rank.values()).index(p)],p))
+        oms.deleteMax(rankp)
+    return rankesito
 
 def TN(analyzer,N):
     return 
